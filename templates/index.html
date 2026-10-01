@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>epidermIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <button id="btn-menu" class="btn-hamburguer" type="button" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <h1 class="topo-logo-h1">
+      <button id="btn-logo-home" class="topo-logo" type="button" aria-label="epidermIA — voltar para a página inicial">
+        <span class="topo-logo-nome">epiderm<span class="letra-bege">I</span><span class="letra-marrom">A</span></span>
+        <span class="subtitulo">Detecção de câncer de pele com CNN</span>
+      </button>
+    </h1>
+  </div>
+</header>
+
+<div id="menu-overlay" class="menu-overlay" hidden></div>
+<nav id="menu-drawer" class="menu-drawer" hidden>
+  <button class="menu-item ativa" data-aba="diagnostico" data-titulo="Enviar foto da lesão">Enviar foto da lesão</button>
+  <button class="menu-item" data-aba="o-que-e" data-titulo="Sobre o câncer de pele">Sobre o câncer de pele</button>
+  <button class="menu-item" data-aba="sinais-alerta" data-titulo="Sinais de alerta">Sinais de alerta</button>
+  <button class="menu-item" data-aba="sobre" data-titulo="Sobre o projeto">Sobre o projeto</button>
+</nav>
+
+<div id="aviso-topo" class="aviso">
+  Este é um projeto acadêmico (TCC) e uma prova de conceito.
+  <strong>NÃO substitui avaliação médica.</strong>
+  Em caso de suspeita, procure um dermatologista.
+</div>
+
+<main>
+  <section id="aba-diagnostico" class="aba">
+    <section id="secao-entrada" class="cartao">
+      <h2 class="titulo-destaque">Como você quer começar?</h2>
+      <p>
+        A análise da imagem olha apenas a lesão. Algumas perguntas rápidas
+        sobre seu histórico ajudam a dar uma orientação mais completa.
+      </p>
+      <div class="entrada-botoes">
+        <button id="btn-entrada-formulario" class="btn btn-entrada" type="button">Responder o formulário</button>
+        <button id="btn-entrada-pular" class="btn btn-entrada" type="button">Pular e enviar a foto</button>
+      </div>
+    </section>
+
+    <section id="secao-upload" class="cartao" hidden>
+      <h2 class="titulo-destaque">Ler antes de enviar</h2>
+
+      <div class="dicas-grid">
+        <div class="dicas-texto">
+          <p><strong>Nítida e focada:</strong> evite fotos tremidas ou desfocadas, o resultado depende dos detalhes da lesão.</p>
+          <p><strong>Boa iluminação:</strong> sem flash estourado nem sombras sobre a lesão.</p>
+          <p><strong>Enquadramento com margem de pele:</strong> a lesão deve ficar centralizada ocupando cerca de 1/3 do quadro, com pele saudável visível ao redor. Evite dar zoom máximo só na lesão.</p>
+        </div>
+
+        <div class="exemplos-enquadramento">
+          <div class="exemplo exemplo-bom">
+            <img class="exemplo-imagem" src="{{ url_for('static', filename='img/exemplo-bom.png') }}" alt="Exemplo de bom enquadramento: lesão centralizada com pele saudável visível ao redor">
+            <p>Bom enquadramento</p>
+          </div>
+          <div class="exemplo exemplo-ruim">
+            <img class="exemplo-imagem" src="{{ url_for('static', filename='img/exemplo-ruim.png') }}" alt="Exemplo a evitar: zoom excessivo, sem margem de pele ao redor da lesão">
+            <p>Evite zoom excessivo</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="dicas-aviso">
+        Lembre-se: o resultado é apenas indicativo e não substitui avaliação
+        médica. Em caso de qualquer dúvida sobre a lesão, procure um
+        dermatologista.
+      </p>
+
+      <div class="campo-arquivo">
+        <label for="input-foto" class="btn btn-cta">Enviar Imagem</label>
+        <input type="file" id="input-foto" accept="image/*" capture="environment" class="input-file-oculto">
+        <span id="nome-arquivo" class="nome-arquivo">Nenhuma foto selecionada</span>
+      </div>
+
+      <div id="area-recorte" hidden>
+        <p class="rotulo-campo">Imagem escolhida</p>
+        <div class="cropper-wrapper">
+          <img id="imagem-para-recorte">
+        </div>
+        <div class="botoes">
+          <button id="btn-recortar-enviar" class="btn btn-primario">Enviar recortada</button>
+          <button id="btn-enviar-original" class="btn btn-secundario">Enviar original</button>
+        </div>
+      </div>
+
+      <p id="status-envio" class="status-envio"></p>
+    </section>
+
+    <section id="secao-resultado" class="cartao" hidden>
+      <h2 class="titulo-destaque">Resultado</h2>
+
+      <div class="resultado-grid">
+        <div class="resultado-info">
+          <p id="resultado-rotulo" class="resultado-rotulo"></p>
+
+          <p id="resultado-prob" class="resultado-prob"></p>
+          <div class="barra-prob">
+            <div id="resultado-barra-fill" class="barra-prob-fill"></div>
+          </div>
+
+          <p class="explicacao-gradcam">
+            O mapa de calor destaca, em vermelho/amarelo, as regiões da
+            imagem que mais influenciaram a resposta do modelo.
+          </p>
+
+          <div id="bloco-fatores-risco-desktop" class="bloco-fatores-risco-desktop" hidden>
+            <p class="rotulo-campo">Fatores de risco (questionário)</p>
+            <p id="comb-conduta-desktop" class="resultado-rotulo"></p>
+            <div id="comb-aviso-regra-seguranca-desktop" class="comparativo-texto" hidden>
+              <p>Uma das respostas aciona avaliação médica independentemente da pontuação abaixo:</p>
+              <ul id="comb-lista-gatilhos-desktop" class="comparativo-lista-gatilhos"></ul>
+            </div>
+            <p id="comb-bloco-a-desktop" class="comparativo-texto"></p>
+            <p id="comb-bloco-b-desktop" class="comparativo-texto"></p>
+            <p id="comb-mensagem-combinacao-desktop" class="alerta-combinacao" hidden></p>
+            <div class="fontes-medicas">
+  <p class="fontes-medicas-titulo">Fatores de risco baseados em informações médicas</p>
+  <ul>
+    <li>
+      <a href="https://www.gov.br/inca/pt-br/assuntos/cancer/tipos/pele-nao-melanoma" target="_blank" rel="noopener">
+        INCA — Câncer de pele não melanoma
+      </a>
+    </li>
+    <li>
+      <a href="https://www.gov.br/inca/pt-br/assuntos/cancer/tipos/pele-melanoma" target="_blank" rel="noopener">
+        INCA — Câncer de pele melanoma
+      </a>
+    </li>
+    <li>
+      <a href="https://www.sbd.org.br/doencas/cancer-da-pele/" target="_blank" rel="noopener">
+        Sociedade Brasileira de Dermatologia — Câncer da pele
+      </a>
+    </li>
+  </ul>
+  <p class="comparativo-fonte">
+    Questionário revisado pela dermatologista [nome a confirmar] — parecer
+    técnico de 28/08/2026.
+  </p>
+</div>
+            <div class="botoes botoes-resultado-combinado">
+              <button id="btn-formulario-refazer-desktop" class="btn btn-secundario" type="button">Refazer questionário</button>
+              <button id="btn-nova-analise-3" class="btn btn-cta" type="button">Analisar outra imagem</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="resultado-visao">
+          <p class="rotulo-campo rotulo-visao-ia">Visão IA</p>
+          <button id="btn-visao-ia" class="visao-ia-botao" type="button" aria-label="Tocar para alternar entre Grad-CAM e foto original">
+            <img id="resultado-imagem-visao" alt="Mapa de calor Grad-CAM">
+            <span id="visao-ia-tag" class="visao-ia-tag">Grad-CAM</span>
+          </button>
+          <p class="visao-ia-legenda">Toque na imagem para alternar entre Grad-CAM e foto original.</p>
+        </div>
+      </div>
+
+      <p class="aviso aviso-resultado">
+        Este resultado é apenas indicativo e não substitui avaliação médica.
+        Em caso de qualquer dúvida sobre a lesão, procure um dermatologista,
+        independentemente do que o sistema indicar.
+      </p>
+
+      <button id="btn-nova-analise" class="btn btn-cta">Enviar outra</button>
+    </section>
+
+    <section id="secao-convite-formulario" class="cartao" hidden>
+      <h2 class="titulo-destaque">Orientação mais completa</h2>
+      <p>
+        A análise da imagem olha só a lesão na foto. Fatores como exposição
+        solar, histórico familiar e evolução da lesão não aparecem nela, mas
+        são reconhecidos como fatores de risco. Quer respondê-los?
+      </p>
+      <button id="btn-abrir-formulario" class="btn btn-secundario">
+        Responder algumas perguntas para uma orientação mais completa
+      </button>
+    </section>
+
+    <section id="secao-formulario" class="cartao" hidden>
+      <h2 class="titulo-destaque">Fatores de risco</h2>
+
+      <p class="dicas-aviso">
+        Questionário revisado por dermatologista. Estas perguntas ajudam a
+        estimar seu nível de atenção com base em fatores de risco
+        reconhecidos. <strong>Não constituem diagnóstico.</strong>
+      </p>
+
+      <p class="formulario-progresso-texto" id="formulario-progresso-texto"></p>
+      <div class="barra-prob">
+        <div id="formulario-progresso-fill" class="barra-prob-fill"></div>
+      </div>
+
+      <div id="formulario-perguntas" class="formulario-perguntas"></div>
+
+      <p id="formulario-erro" class="formulario-erro" hidden></p>
+
+      <div class="botoes">
+        <button id="btn-formulario-voltar" class="btn btn-secundario" type="button">Voltar</button>
+        <button id="btn-formulario-avancar" class="btn btn-primario" type="button">Próximo</button>
+      </div>
+
+      <p class="formulario-privacidade">Suas respostas não são armazenadas.</p>
+    </section>
+
+    <section id="secao-resultado-combinado" class="cartao" hidden>
+      <h2 class="titulo-destaque">Resultado completo</h2>
+
+      <div class="comparativo-grid">
+        <div class="comparativo-cartao">
+          <p class="rotulo-campo">Análise da imagem (rede neural)</p>
+          <p id="comb-rotulo-imagem" class="resultado-rotulo"></p>
+          <p id="comb-prob-imagem" class="resultado-prob"></p>
+        </div>
+        <div class="comparativo-cartao">
+          <p class="rotulo-campo">Fatores de risco (questionário)</p>
+          <p id="comb-conduta" class="resultado-rotulo"></p>
+          <div id="comb-aviso-regra-seguranca" class="comparativo-texto" hidden>
+            <p>Uma das respostas aciona avaliação médica independentemente da pontuação abaixo:</p>
+            <ul id="comb-lista-gatilhos" class="comparativo-lista-gatilhos"></ul>
+          </div>
+          <p id="comb-bloco-a" class="comparativo-texto"></p>
+          <p id="comb-bloco-b" class="comparativo-texto"></p>
+        </div>
+      </div>
+
+      <p id="comb-mensagem-combinacao" class="alerta-combinacao" hidden></p>
+
+      <div class="fontes-medicas">
+  <p class="fontes-medicas-titulo">Fatores de risco baseados em informações médicas</p>
+  <ul>
+    <li>
+      <a href="https://www.gov.br/inca/pt-br/assuntos/cancer/tipos/pele-nao-melanoma" target="_blank" rel="noopener">
+        INCA — Câncer de pele não melanoma
+      </a>
+    </li>
+    <li>
+      <a href="https://www.gov.br/inca/pt-br/assuntos/cancer/tipos/pele-melanoma" target="_blank" rel="noopener">
+        INCA — Câncer de pele melanoma
+      </a>
+    </li>
+    <li>
+      <a href="https://www.sbd.org.br/doencas/cancer-da-pele/" target="_blank" rel="noopener">
+        Sociedade Brasileira de Dermatologia — Câncer da pele
+      </a>
+    </li>
+  </ul>
+  <p class="comparativo-fonte">
+    Questionário revisado pela dermatologista [nome a confirmar] — parecer
+    técnico de 28/08/2026.
+  </p>
+</div>
+
+      <p class="aviso">
+        Este é um projeto acadêmico (TCC) e uma prova de conceito.
+        <strong>NÃO substitui avaliação médica.</strong>
+      </p>
+
+      <div class="botoes botoes-resultado-combinado">
+        <button id="btn-formulario-refazer" class="btn btn-secundario" type="button">Refazer questionário</button>
+        <button id="btn-nova-analise-2" class="btn btn-cta" type="button">Analisar outra imagem</button>
+      </div>
+    </section>
+  </section>
+
+  <script id="dados-formulario" type="application/json">{{ questoes | tojson }}</script>
+
+<section id="aba-o-que-e" class="aba info-pagina pagina-pele" hidden>
+
+  <header class="pele-cabecalho">
+    <h2 class="pele-titulo">Sobre o câncer de pele</h2>
+    <p class="pele-lead">
+      O câncer de pele acontece quando células da pele passam a se multiplicar de
+      maneira anormal e descontrolada, formando uma lesão que tende a crescer e a se
+      modificar com o tempo. É o tipo de câncer mais frequente no Brasil e
+      corresponde a cerca de 30% de todos os tumores malignos registrados no país.
+    </p>
+  </header>
+
+  <section class="pele-secao">
+    <p>
+      Não existe um único câncer de pele: existem tipos diferentes, que nascem de
+      células diferentes e se comportam de formas diferentes. Alguns crescem devagar
+      e permanecem restritos à pele, outros têm maior capacidade de atingir outras
+      partes do corpo.
+    </p>
+    <p>
+      A radiação ultravioleta (UV), do sol ou de fontes artificiais, é o principal
+      fator de risco conhecido, porque o dano que ela causa às células se acumula ao
+      longo da vida. Isso não significa que todos os casos sejam causados
+      exclusivamente pelo sol: características da própria pessoa, como cor da pele,
+      histórico familiar e imunidade, também influenciam.
+    </p>
+
+    <div class="pele-colunas">
+      <div>
+        <h3 class="pele-coluna-titulo">Melanoma</h3>
+        <p>
+          Menos frequente e mais agressivo. Cerca de 8,9 mil casos novos por ano
+          no Brasil.
+        </p>
+      </div>
+      <div>
+        <h3 class="pele-coluna-titulo">Não melanoma</h3>
+        <p>
+          Mais frequente e geralmente menos agressivo. Reúne principalmente o
+          carcinoma basocelular (CBC) e o carcinoma espinocelular (CEC). Cerca de
+          220 mil casos novos por ano no Brasil.
+        </p>
+      </div>
+    </div>
+
+    <p class="pele-fonte">Números estimados pelo INCA para o triênio 2023–2025.</p>
+  </section>
+
+  <section class="pele-secao">
+    <h3 class="pele-subtitulo">Melanoma</h3>
+    <p>
+      O melanoma tem origem nos melanócitos, as células que produzem a melanina, o
+      pigmento que dá cor à pele. É considerado o mais agressivo dos cânceres de
+      pele porque pode atingir camadas mais profundas e, a partir delas, alcançar
+      outros órgãos.
+    </p>
+    <p>
+      Pode surgir como uma lesão nova ou como uma alteração em uma pinta que já
+      existia, mudança de cor, de formato, de tamanho ou de espessura. E pode
+      aparecer em qualquer região do corpo, inclusive em áreas pouco expostas ao
+      sol, como couro cabeludo, plantas dos pés e unhas.
+    </p>
+    <p>
+      Por isso, perceber mudanças na pele faz diferença: o diagnóstico precoce é
+      importante para o tratamento.
+    </p>
+  </section>
+
+  <section class="pele-secao">
+    <h3 class="pele-subtitulo">Câncer de pele não melanoma</h3>
+    <p>
+      Os dois tipos principais são o carcinoma basocelular (CBC) e o carcinoma
+      espinocelular (CEC). Ambos se desenvolvem nas camadas mais superficiais da
+      pele e aparecem com mais frequência em regiões que recebem sol ao longo da
+      vida.
+    </p>
+
+    <div class="pele-colunas">
+      <div>
+        <h4 class="pele-coluna-titulo">Carcinoma basocelular (CBC)</h4>
+        <p>
+          É o tipo mais frequente de câncer de pele e geralmente apresenta
+          crescimento lento. Costuma aparecer em áreas expostas ao sol, como rosto,
+          orelhas, pescoço e ombros, na forma de uma lesão rosada ou avermelhada, de
+          aspecto brilhante ou semelhante a um pequeno nódulo. Possui altas taxas de
+          cura quando tratado adequadamente.
+        </p>
+      </div>
+      <div>
+        <h4 class="pele-coluna-titulo">Carcinoma espinocelular (CEC)</h4>
+        <p>
+          Também é um dos tipos mais comuns e ocorre com frequência em áreas
+          expostas ao sol. Pode se apresentar como uma lesão avermelhada, espessa e
+          descamativa, ou como uma ferida que não cicatriza. Pode ser mais agressivo
+          que o CBC e, em alguns casos, espalhar-se para outras partes do organismo.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      CBC, CEC e melanoma são cânceres diferentes entre si, originados de células
+      diferentes: um tipo não se converte em outro. Cada um tem seu próprio
+      comportamento e seu próprio tratamento.
+    </p>
+  </section>
+
+  <section class="pele-secao">
+    <h3 class="pele-subtitulo">Fatores de risco</h3>
+    <p>
+      Ter um ou mais desses fatores não significa que a pessoa terá câncer de pele.
+      Eles apenas indicam quem precisa de mais atenção com a proteção e com o
+      acompanhamento da própria pele.
+    </p>
+    <ul class="pele-lista">
+      <li>Exposição excessiva à radiação ultravioleta, do sol ou de fontes artificiais</li>
+      <li>Exposição solar frequente ou prolongada, sobretudo nos horários de maior intensidade</li>
+      <li>Histórico de queimaduras solares, principalmente na infância e na adolescência</li>
+      <li>Pele, olhos ou cabelos claros</li>
+      <li>Histórico pessoal ou familiar de determinados cânceres de pele</li>
+      <li>Imunossupressão, por doença ou por uso de medicamentos</li>
+      <li>Exposição ocupacional prolongada ao sol</li>
+    </ul>
+  </section>
+
+  <section class="pele-secao">
+    <h3 class="pele-subtitulo">Como prevenir</h3>
+    <p>
+      Proteção funciona como hábito, e não como exceção. Medidas simples, repetidas
+      no dia a dia, reduzem a exposição acumulada ao longo da vida.
+    </p>
+    <ul class="pele-lista">
+      <li>Evitar a exposição solar excessiva, especialmente entre 10h e 16h</li>
+      <li>Procurar a sombra</li>
+      <li>Usar protetor solar na quantidade indicada, com reaplicação ao longo do dia</li>
+      <li>Usar roupas que protejam a pele, chapéu ou boné e óculos com proteção UV</li>
+      <li>Observar a própria pele regularmente, incluindo costas e couro cabeludo</li>
+      <li>Procurar avaliação profissional diante de alterações suspeitas</li>
+    </ul>
+  </section>
+
+  <section class="pele-secao">
+    <h3 class="pele-subtitulo">Regra ABCDE</h3>
+    <p class="pele-acao">
+      <button class="btn btn-primario" type="button" data-ir-para="sinais-alerta">
+        Ver os sinais de alerta
+      </button>
+    </p>
+  </section>
+
+  <section class="pele-secao">
+    <h3 class="pele-subtitulo">Diagnóstico e tratamento</h3>
+    <p>
+      O diagnóstico é sempre clínico e profissional: nenhum site, aplicativo ou
+      sistema automatizado é capaz de substituí-lo. Uma lesão suspeita deve ser
+      avaliada por um profissional de saúde, que observa a aparência, o histórico e
+      a evolução da lesão.
+    </p>
+    <p>
+      A avaliação clínica pode ser complementada por exames, como a dermatoscopia,
+      e, quando necessário, por uma biópsia. A retirada de uma pequena amostra do
+      tecido para análise em laboratório, que é o que permite confirmar o
+      diagnóstico.
+    </p>
+    <p>
+      O tratamento depende do tipo de câncer, da localização, da extensão e de
+      outras características de cada caso. Identificar e tratar precocemente costuma
+      tornar o tratamento mais simples e melhora as chances de cura.
+    </p>
+  </section>
+
+  <section class="pele-secao pele-secao--divisor">
+    <h3 class="pele-subtitulo">Onde entra o epidermIA</h3>
+    <p>
+      O epidermIA utiliza uma rede neural convolucional (CNN) para analisar imagens
+      de lesões de pele e auxiliar na triagem, identificando características
+      presentes na imagem que possam ajudar na classificação da lesão.
+    </p>
+
+    <p class="pele-fluxo">
+      Imagem <span aria-hidden="true">→</span> CNN <span aria-hidden="true">→</span>
+      Análise <span aria-hidden="true">→</span> Resultado
+    </p>
+
+    <p class="pele-aviso">
+      O epidermIA não realiza diagnóstico médico e não substitui a avaliação de um
+      profissional de saúde.
+    </p>
+  </section>
+
+  <section class="pele-secao pele-secao--divisor pele-referencias">
+    <h3 class="pele-referencias-titulo">Fontes e referências</h3>
+    <ul>
+      <li><a href="https://www.gov.br/inca/pt-br/assuntos/cancer/tipos/pele-nao-melanoma" target="_blank" rel="noopener">INCA — Câncer de pele não melanoma</a></li>
+      <li><a href="https://www.gov.br/inca/pt-br/assuntos/cancer/tipos/pele-melanoma" target="_blank" rel="noopener">INCA — Câncer de pele melanoma</a></li>
+      <li><a href="https://www.gov.br/inca/pt-br/assuntos/cancer/numeros" target="_blank" rel="noopener">INCA — Estimativa 2023: incidência de câncer no Brasil</a></li>
+      <li><a href="https://www.sbd.org.br/doencas/cancer-da-pele/" target="_blank" rel="noopener">Sociedade Brasileira de Dermatologia — Câncer da pele</a></li>
+      <li><a href="https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/c/cancer-de-pele" target="_blank" rel="noopener">Ministério da Saúde — Câncer de pele</a></li>
+    </ul>
+    <p class="pele-fonte">
+      Conteúdo com finalidade educativa: não constitui diagnóstico nem substitui a
+      avaliação de um profissional de saúde.
+    </p>
+  </section>
+
+</section>
+
+  <section id="aba-sinais-alerta" class="aba info-pagina" hidden>
+
+  <header class="info-cabecalho">
+    <h2 class="info-titulo">Sinais de alerta — regra ABCDE</h2>
+    <p class="info-lead">
+      Esta regra é uma ferramenta de autoexame que ajuda a identificar pintas e manchas
+      suspeitas de melanoma. Observe sua pele regularmente, prestando atenção tanto a
+      pintas novas quanto a mudanças nas que você já tem.
+    </p>
+  </header>
+
+  <div class="abcde-lista">
+
+    <!-- A — ASSIMETRIA -->
+    <article class="abcde-item">
+      <div class="abcde-figura">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Lesão dividida ao meio, com as duas metades diferentes entre si">
+          <circle cx="60" cy="60" r="52" fill="#F6E3D5"/>
+          <path d="M60 22c-14 2-22 12-24 26-2 13 4 24 14 30 4 2 7 4 10 4V22z" fill="#8A5A3B"/>
+          <path d="M60 22c18-1 30 10 34 26 3 14-4 28-16 34-6 3-12 4-18 4V22z" fill="#6B4229"/>
+          <line x1="60" y1="14" x2="60" y2="106" stroke="#16697A" stroke-width="2" stroke-dasharray="5 5"/>
+        </svg>
+      </div>
+      <div class="abcde-texto">
+        <p class="abcde-letra">A</p>
+        <h3 class="abcde-nome">Assimetria</h3>
+        <p>
+          Em lesões benignas, ao dividi-las as duas metades são parecidas. Quando uma
+          metade é visivelmente diferente da outra, a lesão é assimétrica e merece
+          atenção.
+        </p>
+      </div>
+    </article>
+ 
+    <!-- B — BORDAS -->
+    <article class="abcde-item">
+      <div class="abcde-figura">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Lesão com borda irregular e serrilhada, comparada a um contorno liso">
+          <circle cx="60" cy="60" r="52" fill="#F6E3D5"/>
+          <circle cx="60" cy="60" r="34" fill="none" stroke="#16697A" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.55"/>
+          <path d="M60 24c8 4 18-2 24 6s0 16 5 22-3 15-3 22-9 10-16 11-13 7-20 3-8-12-15-15-13-6-14-14 6-13 5-21 5-14 12-16 14 2 22-2z" fill="#7A4B2E"/>
+        </svg>
+      </div>
+      <div class="abcde-texto">
+        <p class="abcde-letra">B</p>
+        <h3 class="abcde-nome">Bordas irregulares</h3>
+        <p>
+          Lesões benignas costumam ter contorno liso, arredondado e bem definido. Bordas
+          irregulares, serrilhadas ou mal definidas, que parecem se espalhar pela pele ao
+          redor são sinal de alerta.
+        </p>
+      </div>
+    </article>
+ 
+    <!-- C — COR -->
+    <article class="abcde-item">
+      <div class="abcde-figura">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Lesão com várias tonalidades misturadas">
+          <circle cx="60" cy="60" r="52" fill="#F6E3D5"/>
+          <clipPath id="lesaoC"><circle cx="60" cy="60" r="34"/></clipPath>
+          <g clip-path="url(#lesaoC)">
+            <rect x="26" y="26" width="68" height="68" fill="#8A5A3B"/>
+            <path d="M26 26h34v40H26z" fill="#4A2C18"/>
+            <path d="M60 40h34v30H60z" fill="#B0785A"/>
+            <path d="M26 70h40v24H26z" fill="#2A1A10"/>
+            <path d="M66 66h28v28H66z" fill="#A8544A"/>
+          </g>
+          <circle cx="60" cy="60" r="34" fill="none" stroke="#3A2417" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="abcde-texto">
+        <p class="abcde-letra">C</p>
+        <h3 class="abcde-nome">Cor variada</h3>
+        <p>
+          Uma pinta ou mancha comum apresenta uma única cor uniforme, geralmente
+     em tons de marrom. Desconfie quando houver várias tonalidades na mesma
+     lesão, como diferentes tons de marrom, preto, azul, vermelho ou branco
+     misturados.
+      </p>
+      </div>
+    </article>
+ 
+    <!-- D — DIÂMETRO -->
+    <article class="abcde-item">
+      <div class="abcde-figura">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Lesão medida contra uma escala de 6 milímetros">
+          <circle cx="60" cy="60" r="52" fill="#F6E3D5"/>
+          <circle cx="60" cy="55" r="30" fill="#7A4B2E"/>
+          <line x1="30" y1="98" x2="90" y2="98" stroke="#16697A" stroke-width="2"/>
+          <line x1="30" y1="92" x2="30" y2="104" stroke="#16697A" stroke-width="2"/>
+          <line x1="90" y1="92" x2="90" y2="104" stroke="#16697A" stroke-width="2"/>
+          <text x="60" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#16697A">6 mm</text>
+        </svg>
+      </div>
+      <div class="abcde-texto">
+        <p class="abcde-letra">D</p>
+        <h3 class="abcde-nome">Diâmetro</h3>
+        <p>
+          Melanomas costumam ter mais de 6 milímetros de diâmetro, mas podem começar
+          menores, então o tamanho sozinho não descarta a suspeita.
+        </p>
+      </div>
+    </article>
+ 
+    <!-- E — EVOLUÇÃO -->
+    <article class="abcde-item">
+      <div class="abcde-figura">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Três estágios de uma lesão que cresce e muda ao longo do tempo">
+          <circle cx="60" cy="60" r="52" fill="#F6E3D5"/>
+          <circle cx="32" cy="60" r="9" fill="#9A6B4A"/>
+          <path d="M60 48c7 0 13 5 13 12s-6 13-13 13-13-5-13-12 6-13 13-13z" fill="#7A4B2E"/>
+          <path d="M92 42c9 1 15 8 15 18s-8 19-18 18c-9-1-15-9-14-19 1-9 8-18 17-17z" fill="#4A2C18"/>
+          <path d="M44 60h6M76 60h6" stroke="#16697A" stroke-width="2" stroke-linecap="round"/>
+          <path d="M48 57l4 3-4 3M80 57l4 3-4 3" fill="none" stroke="#16697A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="abcde-texto">
+        <p class="abcde-letra">E</p>
+        <h3 class="abcde-nome">Evolução</h3>
+        <p>
+          <strong>Este é o sinal mais importante.</strong> Pintas benignas permanecem
+          praticamente inalteradas ao longo dos anos. Qualquer mudança, no tamanho, na
+          forma, na cor, na espessura ou no surgimento de sintomas como coceira, dor ou
+          sangramento, indica que a lesão precisa ser avaliada por um médico.
+        </p>
+      </div>
+    </article>
+ 
+  </div>
+ 
+  <aside class="info-nota">
+    <p class="info-nota-rotulo">Atenção</p>
+    <p>
+      A regra ABCDE foi criada para o melanoma. O não melanoma costuma se apresentar de
+      forma diferente, como uma ferida que não cicatriza em quatro semanas, uma lesão
+      avermelhada de crescimento lento ou uma casquinha que sempre volta no mesmo lugar.
+    </p>
+    <p>
+      Ao identificar um sinal suspeito, procure um dermatologista. O diagnóstico precoce
+      aumenta muito as chances de cura.
+    </p>
+  </aside>
+ 
+</section>
+
+  <section id="aba-sobre" class="aba info-pagina" hidden>
+
+  <header class="info-cabecalho">
+    <h2 class="info-titulo">Sobre o projeto</h2>
+  </header>
+
+  <article class="info-secao">
+    <h3 class="info-subtitulo">O que é o projeto</h3>
+    <p>
+      O epidermIA é um Trabalho de Conclusão de Curso (TCC) de técnico em eletrônica,
+      uma <strong>prova de conceito acadêmica</strong>, não um produto médico.
+    </p>
+  </article>
+
+  <article class="info-secao">
+    <h3 class="info-subtitulo">Como funciona</h3>
+    <p>
+      O modelo é uma CNN MobileNetV2, implementada em PyTorch Lightning e treinada com
+      imagens de bases públicas, que estima a partir de uma foto se uma lesão de pele
+      é sugestiva de câncer de pele maligno.
+    </p>
+    <p>
+      Junto ao resultado, o sistema exibe um mapa de calor (Grad-CAM) que destaca as
+      regiões da imagem que mais influenciaram a resposta do modelo. Essa visualização
+      permite verificar se a rede está observando a lesão, e não elementos irrelevantes
+      da foto, como fundo, roupas ou objetos.
+    </p>
+  </article>
+
+  <article class="info-secao">
+    <h3 class="info-subtitulo">Tecnologias utilizadas</h3>
+    <dl class="info-especificacoes">
+      <div class="info-especificacao">
+        <dt>Arquitetura</dt>
+        <dd>MobileNetV2 — rede neural convolucional, com transfer learning a partir de pesos do ImageNet</dd>
+      </div>
+      <div class="info-especificacao">
+        <dt>Treinamento</dt>
+        <dd>PyTorch e PyTorch Lightning</dd>
+      </div>
+      <div class="info-especificacao">
+        <dt>Visão computacional</dt>
+        <dd>torchvision (modelo e transformações) e Pillow (leitura e conversão das imagens)</dd>
+      </div>
+      <div class="info-especificacao">
+        <dt>Métricas</dt>
+        <dd>TorchMetrics e NumPy</dd>
+      </div>
+      <div class="info-especificacao">
+        <dt>Explicabilidade</dt>
+        <dd>Grad-CAM (biblioteca pytorch-grad-cam), aplicado à última camada convolucional</dd>
+      </div>
+      <div class="info-especificacao">
+        <dt>Servidor web</dt>
+        <dd>Flask e Werkzeug (Python)</dd>
+      </div>
+      <div class="info-especificacao">
+        <dt>Interface</dt>
+        <dd>HTML, CSS e JavaScript, sem framework de front-end</dd>
+      </div>
+      <div class="info-especificacao">
+        <dt>Recorte da foto</dt>
+        <dd>Cropper.js, executado no próprio navegador antes do envio</dd>
+      </div>
+      <div class="info-especificacao">
+        <dt>Questionário de risco</dt>
+        <dd>Lógica de pontuação própria em Python, revisada por dermatologista</dd>
+      </div>
+    </dl>
+  </article>
+
+  <article class="info-secao">
+    <h3 class="info-subtitulo">Dados utilizados</h3>
+    <p class="info-intro-lista">
+      A rede foi treinada com imagens de bases públicas de acesso verificado:
+    </p>
+
+    <dl class="info-bases">
+      <div class="info-base">
+        <dt>ISIC Archive</dt>
+        <dd>
+          Repositório internacional de imagens dermatológicas, mantido pela
+          International Skin Imaging Collaboration.
+          <span class="info-doi">isic-archive.com</span>
+        </dd>
+      </div>
+      <div class="info-base">
+        <dt>SCIN — Skin Condition Image Network</dt>
+        <dd>
+          Base desenvolvida pelo Google Health em parceria com a Stanford Medicine,
+          composta por fotografias feitas pelos próprios participantes com smartphones,
+          mediante consentimento informado.
+          <span class="info-doi">DOI 10.5281/zenodo.10819503</span>
+        </dd>
+      </div>
+      <div class="info-base">
+        <dt>PAD-UFES-20</dt>
+        <dd>
+          Base clínica brasileira, da Universidade Federal do Espírito Santo, com
+          imagens de lesões de pele obtidas por smartphone.
+          <span class="info-doi">DOI 10.1016/j.dib.2020.106221</span>
+        </dd>
+      </div>
+    </dl>
+
+    <p>
+      Uma decisão importante do projeto foi utilizar apenas imagens clínicas,
+      fotografias comuns, como as que qualquer pessoa tira com o celular, e não imagens
+      dermatoscópicas, obtidas com equipamento médico de aumento. Assim o treinamento
+      fica coerente com o uso real do sistema, analisando apenas a lesão.
+    </p>
+  </article>
+
+  <article class="info-secao">
+    <h3 class="info-subtitulo">Resultados</h3>
+
+    <p class="resultado-legenda">Conjunto de teste: 1.230 imagens — 546 benignas e 684 malignas</p>
+
+    <div class="info-tabela-wrap">
+      <table class="info-tabela-metricas">
+        <thead>
+          <tr>
+            <th>Métrica</th>
+            <th>Resultado</th>
+            <th>O que significa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Acurácia geral</td>
+            <td>89,8%</td>
+            <td>De todas as imagens testadas, quantas o modelo classificou corretamente.</td>
+          </tr>
+          <tr>
+            <td>Sensibilidade — malignas</td>
+            <td>92,1%</td>
+            <td>De todas as lesões malignas, quantas o modelo conseguiu sinalizar.</td>
+          </tr>
+          <tr>
+            <td>Especificidade — benignas</td>
+            <td>87,0%</td>
+            <td>De todas as lesões benignas, quantas o modelo deixou corretamente sem alerta.</td>
+          </tr>
+          <tr>
+            <td>Precisão — malignas</td>
+            <td>89,9%</td>
+            <td>Quando o modelo sinaliza “maligno”, com que frequência ele está certo.</td>
+          </tr>
+          <tr>
+            <td>F1-score — malignas</td>
+            <td>91,0%</td>
+            <td>Equilíbrio entre sensibilidade e precisão, em um único número.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="resultado-legenda">Por que a sensibilidade importa</p>
+    <p>
+      A sensibilidade foi a métrica priorizada no projeto. Em uma triagem, deixar de
+      sinalizar um caso que merece atenção é mais grave do que gerar um alerta
+      desnecessário.
+    </p>
+
+    <div class="resultado-limitacao">
+      <p class="resultado-legenda resultado-legenda--limitacao">Limitação</p>
+      <p>
+        Uma sensibilidade de 92,1% significa que cerca de 7,9% das lesões malignas do
+        conjunto de teste não foram identificadas pelo modelo. Essa é uma das principais
+        limitações do sistema e reforça que o resultado não substitui avaliação médica.
+      </p>
+    </div>
+  </article>
+
+  <article class="info-secao">
+    <h3 class="info-subtitulo">Limitações</h3>
+    <ul class="info-limitacoes">
+      <li>
+        Aproximadamente <strong>7,9% das lesões malignas</strong> do conjunto de teste
+        não foram identificadas pelo modelo.
+      </li>
+      <li>
+        Lesões inflamatórias isoladas, como acne, podem ser sinalizadas incorretamente,
+        por apresentarem aparência semelhante à de certas lesões malignas em uma
+        fotografia estática.
+      </li>
+      <li>
+        A qualidade da foto influencia o resultado: imagens desfocadas ou com
+        enquadramento inadequado produzem respostas menos confiáveis.
+      </li>
+      <li>
+        O sistema <strong>não substitui o exame clínico</strong>.
+      </li>
+    </ul>
+  </article>
+
+  <article class="info-secao">
+    <h3 class="info-subtitulo">Autores</h3>
+    <p class="info-autores">Luan Jung Wendhausen e Pedro Endres</p>
+    <p class="info-instituicao">
+      Curso Técnico em Eletrônica<br>
+      Escola Liberato Salzano Vieira da Cunha<br>
+      Orientação: Lucas Gutkoski · 2026
+    </p>
+  </article>
+
+</section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

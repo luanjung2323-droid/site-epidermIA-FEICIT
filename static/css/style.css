@@ -1,0 +1,1621 @@
+/*
+  Paleta e variaveis do tema epidermIA, baseadas no wireframe do usuario.
+  Quando a identidade visual definitiva chegar (cores, fontes, logo),
+  atualizar so os valores aqui.
+*/
+:root {
+  --cor-header: #14708f;
+  --cor-header-escuro: #0e576f;
+  --cor-menu-ativo: #ffffff;
+  --cor-logo-bege: #e8d3ab;
+  --cor-logo-marrom: #c98a4b;
+
+  --cor-verde: #2e9e44;
+  --cor-verde-texto: #2e7d32;
+  --cor-vermelho: #d32f2f;
+  --cor-vermelho-texto: #c62828;
+
+  --cor-nota-fundo: #eaf3f5;
+  --cor-nota-texto: #0e2c36;
+  --cor-nota-borda: #c9dfe4;
+
+  --cor-alerta-fundo: #fdecea;
+  --cor-alerta-borda: #f3c2bd;
+
+  --cor-texto: #1e293b;
+  --cor-texto-suave: #64748b;
+
+  --cor-fundo-pagina: #ffffff;
+  --cor-cartao: #ffffff;
+  --cor-borda: #e2e8f0;
+
+  --raio: 12px;
+  --raio-pequeno: 10px;
+  --raio-pill: 999px;
+
+  --fonte: "Inter", system-ui, -apple-system, sans-serif;
+  --largura-conteudo: 600px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fonte);
+  color: var(--cor-texto);
+  background: var(--cor-fundo-pagina);
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+}
+
+/* ---------- Cabecalho ---------- */
+
+.topo {
+  background: var(--cor-header);
+  color: #fff;
+  padding: 0.9rem 1rem;
+}
+
+.topo-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: var(--largura-conteudo);
+  margin: 0 auto;
+}
+
+.btn-hamburguer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-hamburguer span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+.topo-logo-h1 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1;
+}
+
+/* A logo inteira e um botao: clicar nela sempre volta pra pagina inicial. */
+.topo-logo {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--fonte);
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.topo-logo-nome {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.topo-logo:hover .topo-logo-nome {
+  opacity: 0.9;
+}
+
+.topo-logo .letra-bege {
+  color: var(--cor-logo-bege);
+}
+
+.topo-logo .letra-marrom {
+  color: var(--cor-logo-marrom);
+}
+
+.topo-logo .subtitulo {
+  margin: 0.1rem 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- Aviso permanente ---------- */
+
+.aviso {
+  background: #eaf3f5;
+  color: #0e2c36;
+  border-bottom: 1px solid #c9dfe4;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.aviso strong {
+  color: var(--cor-header-escuro);
+}
+
+/* Faixa fixa em todas as abas: lembra que o site e um TCC. */
+#aviso-topo {
+  background: #eaf3f5;
+  border-bottom: 1px solid #c9dfe4;
+  padding: 0.55rem 1rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ---------- Menu hamburguer (drawer) ---------- */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 40;
+}
+
+.menu-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(78vw, 300px);
+  background: var(--cor-header);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1.25rem;
+  box-shadow: 4px 0 18px rgba(0, 0, 0, 0.25);
+}
+
+.menu-drawer[hidden] {
+  display: none;
+}
+
+.menu-item {
+  background: none;
+  border: none;
+  border-left: 4px solid transparent;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: left;
+  font-family: var(--fonte);
+  font-size: 0.95rem;
+  padding: 0.9rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.menu-item.ativa {
+  background: rgba(255, 255, 255, 0.12);
+  border-left-color: var(--cor-menu-ativo);
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ---------- Layout geral ---------- */
+
+main {
+  max-width: var(--largura-conteudo);
+  margin: 0 auto;
+  padding: 1.25rem 1rem 3rem;
+}
+
+.cartao {
+  background: var(--cor-cartao);
+  border-radius: var(--raio);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.entrada-botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.1rem;
+}
+
+.btn-entrada {
+  flex: 1;
+  background: var(--cor-header);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.95rem 1.25rem;
+  border-radius: var(--raio-pequeno);
+  border: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-entrada:hover {
+  background: var(--cor-header-escuro);
+}
+
+.cartao h3 {
+  margin-bottom: 0.4rem;
+}
+
+.titulo-destaque {
+  color: var(--cor-header);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0 0 1rem;
+}
+
+/* ---------- Botoes ---------- */
+
+.btn {
+  display: inline-block;
+  font-family: var(--fonte);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.1rem;
+  border-radius: var(--raio-pequeno);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-cta {
+  display: block;
+  width: 100%;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 0.95rem 1.25rem;
+  border-radius: var(--raio-pill);
+  background: var(--cor-header);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(20, 112, 143, 0.35);
+}
+
+.btn-cta:hover {
+  background: var(--cor-header-escuro);
+}
+
+.btn-primario {
+  background: var(--cor-header);
+  color: #ffffff;
+}
+
+.btn-primario:hover {
+  background: var(--cor-header-escuro);
+}
+
+.btn-secundario {
+  background: transparent;
+  border-color: var(--cor-header);
+  color: var(--cor-header);
+}
+
+.btn-secundario:hover {
+  background: #eaf3f5;
+}
+
+.botoes {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.botoes .btn {
+  flex: 1;
+}
+
+/* ---------- Campo de upload ---------- */
+
+.campo-arquivo {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.input-file-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.nome-arquivo {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  text-align: center;
+}
+
+.status-envio {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+  min-height: 1.2em;
+}
+
+.rotulo-campo {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 1.1rem 0 0.5rem;
+}
+
+/* ---------- Recorte (Cropper.js) ---------- */
+
+.cropper-wrapper {
+  width: 100%;
+  height: 320px;
+  margin-bottom: 1rem;
+  border-radius: var(--raio-pequeno);
+  overflow: hidden;
+  border: 1px solid var(--cor-borda);
+}
+
+.cropper-wrapper img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- Dicas antes de enviar ---------- */
+
+.dicas-grid {
+  display: block;
+}
+
+.dicas-texto p {
+  margin: 0 0 0.7rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.dicas-texto strong {
+  color: var(--cor-header);
+}
+
+.exemplos-enquadramento {
+  display: flex;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+
+.exemplo {
+  flex: 1;
+  text-align: center;
+}
+
+.exemplo-imagem {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--raio);
+  border: 3px solid #ccc;
+  display: block;
+}
+
+.exemplo-bom .exemplo-imagem {
+  border-color: var(--cor-verde);
+}
+
+.exemplo-ruim .exemplo-imagem {
+  border-color: var(--cor-vermelho);
+}
+
+.exemplo p {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0.4rem 0 0;
+}
+
+.exemplo-bom p {
+  color: var(--cor-verde-texto);
+}
+
+.exemplo-ruim p {
+  color: var(--cor-vermelho-texto);
+}
+
+.dicas-aviso {
+  font-size: 0.8rem;
+  color: var(--cor-nota-texto);
+  background: var(--cor-nota-fundo);
+  border: 1px solid var(--cor-nota-borda);
+  border-radius: var(--raio-pequeno);
+  padding: 0.6rem 0.8rem;
+  margin: 1rem 0 1.25rem;
+}
+
+/* ---------- Resultado ---------- */
+
+.resultado-grid {
+  display: block;
+}
+
+.resultado-rotulo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+
+.resultado-rotulo.alerta {
+  color: var(--cor-vermelho-texto);
+}
+
+.resultado-rotulo.neutro {
+  color: var(--cor-verde-texto);
+}
+
+.resultado-prob {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--cor-header);
+  margin: 0 0 0.4rem;
+}
+
+.barra-prob {
+  width: 100%;
+  height: 14px;
+  border-radius: 7px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.barra-prob-fill {
+  height: 100%;
+  width: 0%;
+  background: #94a3ab;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.visao-ia-botao {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  overflow: hidden;
+  background: none;
+  cursor: pointer;
+}
+
+.visao-ia-botao img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+.visao-ia-tag {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--raio-pill);
+}
+
+.visao-ia-legenda {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  margin: 0.5rem 0 0;
+  text-align: center;
+}
+
+.explicacao-gradcam {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  margin: 1.1rem 0;
+  line-height: 1.5;
+}
+
+.aviso-resultado {
+  margin: 1rem 0;
+  border-radius: var(--raio-pequeno);
+  border: 1px solid var(--cor-nota-borda);
+}
+
+/* ---------- Secoes informativas ---------- */
+
+.texto-placeholder {
+  color: #94a3ab;
+  font-style: italic;
+  border-left: 3px solid var(--cor-borda);
+  padding-left: 0.75rem;
+}
+
+/* ---------- Formulario de fatores de risco ---------- */
+
+.formulario-progresso-texto {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+  margin: 0.75rem 0 0.35rem;
+}
+
+.formulario-perguntas {
+  margin: 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.questao-texto {
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+}
+
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.opcao {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.opcao:has(input:checked) {
+  border-color: var(--cor-header);
+  background: var(--cor-aqua-claro, #eaf3f5);
+}
+
+.opcao input {
+  accent-color: var(--cor-header);
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+}
+
+.formulario-privacidade {
+  font-size: 0.78rem;
+  color: var(--cor-texto-suave);
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.formulario-erro {
+  background: var(--cor-alerta-fundo);
+  border: 1px solid var(--cor-alerta-borda);
+  color: var(--cor-vermelho-texto);
+  border-radius: var(--raio-pequeno);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.comparativo-grid {
+  display: block;
+}
+
+.comparativo-cartao {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.comparativo-texto {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  line-height: 1.5;
+  margin: 0.5rem 0 0;
+}
+
+.comparativo-texto p { margin: 0 0 0.4rem; }
+.comparativo-texto p:last-child { margin-bottom: 0; }
+
+.comparativo-lista-gatilhos {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.alerta-combinacao {
+  background: var(--cor-alerta-fundo);
+  border: 1px solid var(--cor-alerta-borda);
+  color: var(--cor-vermelho-texto);
+  border-radius: var(--raio-pequeno);
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 1.25rem 0;
+}
+
+.comparativo-fonte {
+  font-size: 0.75rem;
+  color: var(--cor-texto-suave);
+  margin: 1rem 0;
+}
+
+.botoes-resultado-combinado .btn {
+  border-radius: var(--raio-pill);
+}
+
+/* No mobile o resultado do formulario fica no cartao separado
+   (secao-resultado-combinado); esse bloco so aparece no desktop,
+   dentro do espaco vago ao lado do Visao IA. */
+.bloco-fatores-risco-desktop {
+  display: none;
+}
+
+/* ==========================================================
+   Adaptacao para desktop/telas largas.
+   O wireframe original foi desenhado so para mobile; aqui a
+   navegacao vira uma barra horizontal fixa (em vez do drawer
+   escondido atras do hamburguer) e os blocos que faziam sentido
+   empilhados no celular passam a usar o espaco extra em colunas.
+   ========================================================== */
+@media (min-width: 860px) {
+  :root {
+    --largura-conteudo: 960px;
+  }
+
+  /* nav vira barra horizontal sempre visivel, sem hamburguer/overlay */
+  .btn-hamburguer {
+    display: none;
+  }
+
+  .menu-overlay {
+    display: none !important;
+  }
+
+  .menu-drawer,
+  .menu-drawer[hidden] {
+    display: flex;
+  }
+
+  .menu-drawer {
+    position: static;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0;
+    background: var(--cor-header-escuro);
+    box-shadow: none;
+  }
+
+  .menu-item {
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.85rem 1.2rem;
+  }
+
+  .menu-item.ativa {
+    border-left-color: transparent;
+    border-bottom-color: var(--cor-menu-ativo);
+  }
+
+  .cartao {
+    padding: 1.75rem 2rem;
+  }
+
+  /* "Ler antes de enviar": texto e exemplos lado a lado */
+  .dicas-grid {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.5rem;
+  }
+
+  .dicas-grid .dicas-texto {
+    flex: 1.15;
+  }
+
+  .dicas-grid .exemplos-enquadramento {
+    flex: 1;
+    margin: 0;
+  }
+
+  /* Area de upload/recorte centralizada, sem esticar a largura toda */
+  .campo-arquivo,
+  #area-recorte {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cropper-wrapper {
+    height: 400px;
+  }
+
+  /* Resultado: info a esquerda, Visao IA a direita */
+  .resultado-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* Fatores de risco aparecem no espaco vago abaixo da explicacao do
+     Grad-CAM, em vez de um segundo cartao repetindo o resultado da
+     imagem (secao-resultado-combinado fica so pro mobile). */
+  .bloco-fatores-risco-desktop {
+    display: block;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--cor-borda);
+  }
+
+  .bloco-fatores-risco-desktop[hidden] {
+    display: none;
+  }
+
+  .aviso-resultado,
+  #btn-nova-analise {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #btn-nova-analise {
+    display: block;
+  }
+
+  /* Tela de entrada: os dois botoes lado a lado, mesmo peso visual */
+  .entrada-botoes {
+    flex-direction: row;
+  }
+
+  /* Formulario de fatores de risco: perguntas em 2 colunas, cartoes lado a lado */
+  .formulario-perguntas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2rem;
+  }
+
+  .comparativo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .comparativo-cartao {
+    margin-bottom: 0;
+  }
+}
+
+
+
+
+
+
+/* =========================================================================
+   epidermIA — camada de design das seções informativas
+   Cole ESTE ARQUIVO NO FINAL do seu static/css/style.css
+   (ou salve separado e adicione o <link> DEPOIS do style.css atual)
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   1. TOKENS
+   Mesma paleta azul-petróleo do restante do site, com raios de borda
+   bem menores e uma pilha monoespaçada para números/técnica.
+   ------------------------------------------------------------------------- */
+:root {
+  --tinta:      #0E2C36;
+  --petroleo:   #16697A;
+  --petroleo-2: #10505E;
+  --agua:       #EAF3F5;
+  --agua-linha: #C9DFE4;
+  --alerta:     #9C2B20;
+  --seguro:     #1C6B3A;
+  --cinza:      #5C6B70;
+
+  --medida:     64ch;
+  --raio-p:     8px;
+  --info-raio:  4px;
+}
+
+/* -------------------------------------------------------------------------
+   2. TIPOGRAFIA
+   Uma família só (Inter) do título ao corpo — diferenciação por peso e
+   tamanho, não por troca de fonte.
+   ------------------------------------------------------------------------- */
+.info-pagina {
+  max-width: 780px;
+  margin-inline: auto;
+  padding: 40px 28px 64px;
+  color: var(--tinta);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.info-pagina p {
+  max-width: var(--medida);
+  margin: 0 0 1.1em;
+}
+
+.info-pagina p:last-child { margin-bottom: 0; }
+
+/* Cabeçalho de página --------------------------------------------------- */
+.info-cabecalho {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--agua-linha);
+}
+
+.info-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cinza);
+  margin: 0 0 10px;
+}
+
+.info-titulo {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--petroleo);
+  margin: 0 0 14px;
+}
+
+.info-lead {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--cinza);
+  max-width: 58ch;
+}
+
+.info-subtitulo {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--petroleo);
+  margin: 0 0 14px;
+}
+
+.info-subtitulo--menor { font-size: 1.05rem; margin-bottom: 8px; }
+
+.info-intro-lista {
+  font-weight: 500;
+  color: var(--tinta);
+  margin-bottom: 0.75em !important;
+}
+
+/* Marcador de texto — substitui badges/chips com fundo preenchido ------- */
+.info-marcador {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--petroleo);
+}
+
+.info-marcador::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  background: var(--petroleo);
+}
+
+.info-marcador--alerta { color: var(--alerta); }
+.info-marcador--alerta::before { background: var(--alerta); }
+
+/* -------------------------------------------------------------------------
+   3. SEÇÕES NUMERADAS / DIVIDIDAS POR LINHA
+   Usado nas 3 páginas em vez de cards: cada bloco é separado por uma
+   linha superior, sem fundo nem sombra.
+   ------------------------------------------------------------------------- */
+.info-secao {
+  margin-bottom: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--agua-linha);
+}
+
+.info-secao:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+/* -------------------------------------------------------------------------
+   4. ABA "SOBRE O CÂNCER DE PELE" — comparação CBC / CEC em duas colunas
+   ------------------------------------------------------------------------- */
+.info-comparacao {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+  margin: 20px 0 26px;
+}
+
+.info-comparacao-col:first-child {
+  padding-right: 32px;
+  border-right: 1px solid var(--agua-linha);
+}
+
+.info-comparacao-col p { font-size: 0.98rem; line-height: 1.65; }
+
+/* -------------------------------------------------------------------------
+   5. ABA "SINAIS DE ALERTA" — lista ABCDE alternada
+   Em vez de cinco cartões idênticos, os itens alternam ilustração/texto
+   e são separados por uma linha, sem caixa nem sombra.
+   ------------------------------------------------------------------------- */
+.abcde-lista { margin-bottom: 36px; }
+
+.abcde-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 28px 0;
+  border-top: 1px solid var(--agua-linha);
+}
+
+.abcde-lista .abcde-item:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.abcde-item:nth-child(even) { flex-direction: row-reverse; }
+
+.abcde-figura { flex: 0 0 92px; }
+.abcde-figura svg { display: block; width: 100%; height: auto; }
+
+.abcde-texto { flex: 1; min-width: 0; }
+
+.abcde-letra {
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--petroleo);
+  margin: 0 0 2px !important;
+}
+
+.abcde-nome {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--petroleo);
+  margin: 0 0 8px;
+}
+
+.abcde-texto p:last-of-type {
+  font-size: 1rem;
+  line-height: 1.68;
+  color: var(--tinta);
+}
+
+
+/* Nota de encerramento --------------------------------------------------- */
+.info-nota {
+  background: var(--agua);
+  border: 1px solid var(--agua-linha);
+  border-left: 4px solid var(--petroleo);
+  border-radius: var(--raio-p);
+  padding: 22px 26px;
+}
+
+.info-nota-rotulo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--petroleo);
+  margin: 0 0 8px !important;
+}
+
+.info-nota p { font-size: 1rem; line-height: 1.65; }
+
+/* -------------------------------------------------------------------------
+   6. ABA "SOBRE O PROJETO"
+   ------------------------------------------------------------------------- */
+
+/* Tecnologias utilizadas -------------------------------------------------- */
+.info-especificacoes { margin: 0; }
+
+.info-especificacao {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--agua-linha);
+}
+
+.info-especificacao:last-child { border-bottom: none; }
+
+.info-especificacao dt {
+  flex: 0 0 140px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--petroleo);
+}
+
+.info-especificacao dd {
+  flex: 1;
+  min-width: 200px;
+  margin: 0;
+  font-size: 0.98rem;
+  color: var(--tinta);
+}
+
+/* Bases de dados --------------------------------------------------------- */
+.info-bases { margin: 0 0 22px; }
+
+.info-base {
+  padding: 12px 0 12px 18px;
+  border-left: 2px solid var(--agua-linha);
+  margin-bottom: 4px;
+}
+
+.info-base dt {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--petroleo);
+  margin-bottom: 4px;
+}
+
+.info-base dd {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--cinza);
+  max-width: var(--medida);
+}
+
+/* Rótulos de subseção, no estilo de um relatório ---------------------------- */
+.resultado-legenda {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cinza);
+  margin: 26px 0 10px !important;
+}
+
+.resultado-legenda--limitacao { color: var(--petroleo); }
+
+/* Limitação: linha lateral fina, sem caixa preenchida ----------------------- */
+.resultado-limitacao {
+  margin: 26px 0;
+  padding-left: 16px;
+  border-left: 3px solid var(--petroleo);
+}
+
+.resultado-limitacao .resultado-legenda { margin-top: 0 !important; }
+.resultado-limitacao p:not(.resultado-legenda) { margin: 0 0 8px !important; }
+.resultado-limitacao p:last-child { margin-bottom: 0 !important; }
+
+/* Resultados: tabela em vez de cards gigantes ---------------------------- */
+.info-tabela-wrap {
+  overflow-x: auto;
+  margin: 4px 0 14px;
+}
+
+/* Metrica | resultado | o que significa -- uma unica tabela, mesma fonte
+   e mesmo tratamento para tudo. */
+.info-tabela-metricas {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.info-tabela-metricas th {
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cinza);
+  padding: 0 16px 10px 0;
+  border-bottom: 1.5px solid var(--petroleo);
+  white-space: nowrap;
+}
+
+.info-tabela-metricas td {
+  padding: 13px 16px 13px 0;
+  border-bottom: 1px solid var(--agua-linha);
+  vertical-align: top;
+  line-height: 1.55;
+}
+
+.info-tabela-metricas td:last-child,
+.info-tabela-metricas th:last-child { padding-right: 0; }
+
+.info-tabela-metricas tr:last-child td { border-bottom: none; }
+
+/* 1a coluna: nome da metrica */
+.info-tabela-metricas td:first-child {
+  font-weight: 600;
+  color: var(--tinta);
+  white-space: nowrap;
+}
+
+/* 2a coluna: o numero, em destaque */
+.info-tabela-metricas td:nth-child(2) {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--petroleo);
+  white-space: nowrap;
+}
+
+/* 3a coluna: explicacao em uma frase */
+.info-tabela-metricas td:nth-child(3) {
+  color: var(--cinza);
+  font-size: 0.92rem;
+  min-width: 240px;
+}
+
+/* Limitações ------------------------------------------------------------- */
+.info-limitacoes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: var(--medida);
+}
+
+.info-limitacoes li {
+  position: relative;
+  padding: 12px 0 12px 22px;
+  border-bottom: 1px solid var(--agua-linha);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.info-limitacoes li:last-child { border-bottom: none; }
+
+.info-limitacoes li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  color: var(--petroleo);
+  font-weight: 700;
+}
+
+/* Autores ----------------------------------------------------------------- */
+.info-autores {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--tinta);
+  margin-bottom: 8px !important;
+}
+
+.info-instituicao {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--cinza);
+  margin: 0 !important;
+}
+
+/* Referências ------------------------------------------------------------ */
+.info-referencias {
+  border-top: 1px solid var(--agua-linha);
+  padding-top: 24px;
+  margin-top: 8px;
+}
+
+.info-referencias-titulo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cinza);
+  margin: 0 0 16px;
+}
+
+.info-referencias ul { list-style: none; padding: 0; margin: 0; }
+
+.info-referencias li {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--cinza);
+  padding: 10px 0;
+}
+
+.info-referencias strong { color: var(--tinta); font-weight: 600; }
+
+.info-referencias a { color: var(--petroleo); text-decoration: underline; }
+.info-referencias a:hover { color: var(--tinta); }
+
+.info-referencias-nota {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--cinza);
+  margin: 16px 0 0 !important;
+  max-width: var(--medida);
+}
+
+.info-doi {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--cinza);
+}
+
+/* -------------------------------------------------------------------------
+   7. BLOCO DE FONTES NO RESULTADO
+   (o antigo .comparativo-fonte ficava tudo grudado numa linha)
+   ------------------------------------------------------------------------- */
+.fontes-medicas {
+  border-top: 1px solid var(--agua-linha);
+  margin-top: 22px;
+  padding-top: 16px;
+}
+
+.fontes-medicas-titulo {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cinza);
+  margin: 0 0 10px;
+}
+
+.fontes-medicas ul { list-style: none; padding: 0; margin: 0; }
+
+.fontes-medicas li { margin-bottom: 6px; }
+
+.fontes-medicas a {
+  font-size: 0.86rem;
+  color: var(--petroleo);
+  text-decoration: none;
+  border-bottom: 1px solid var(--agua-linha);
+}
+
+.fontes-medicas a:hover {
+  color: var(--tinta);
+  border-bottom-color: var(--petroleo);
+}
+
+/* -------------------------------------------------------------------------
+   8. AJUSTES GERAIS (valem para todas as telas, inclusive envio/resultado)
+   ------------------------------------------------------------------------- */
+
+/* Faixa de aviso: mais respirável */
+.aviso {
+  line-height: 1.6;
+}
+
+/* Botões: mais peso e área de toque */
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: var(--raio-p);
+  padding: 13px 24px;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+/* Foco visível — acessibilidade */
+.btn:focus-visible,
+.menu-item:focus-visible,
+.visao-ia-botao:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--petroleo);
+  outline-offset: 2px;
+}
+
+
+/* -------------------------------------------------------------------------
+   9. RESPONSIVO
+   ------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .info-pagina { padding: 28px 20px 48px; font-size: 1rem; }
+
+  .info-comparacao { grid-template-columns: 1fr; gap: 24px 0; }
+  .info-comparacao-col:first-child {
+    padding-right: 0;
+    padding-bottom: 22px;
+    border-right: none;
+    border-bottom: 1px solid var(--agua-linha);
+  }
+
+  .abcde-item,
+  .abcde-item:nth-child(even) {
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 0;
+  }
+  .abcde-figura { flex: 0 0 auto; width: 84px; }
+
+
+  .info-especificacao dt { flex-basis: 100%; }
+
+  .info-tabela-metricas { font-size: 0.92rem; }
+
+}
+
+/* Respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn:hover { transform: none; }
+}
+
+
+
+#secao-resultado-combinado > .aviso {
+  display: none;
+}
+ 
+/* Esconde a faixa do topo enquanto um resultado está na tela.
+   O aviso forte abaixo cumpre o papel com muito mais destaque.
+   (Navegadores antigos ignoram e mantêm a faixa — sem prejuízo.) */
+body:has(#secao-resultado:not([hidden])) #aviso-topo,
+body:has(#secao-resultado-combinado:not([hidden])) #aviso-topo {
+  display: none;
+}
+ 
+/* O aviso que fica: agora com presença */
+.aviso-resultado {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  max-width: none;
+  margin: 28px 0 24px;
+  padding: 20px 22px;
+  background: var(--agua);
+  border: 1px solid var(--agua-linha);
+  border-left: 4px solid var(--petroleo);
+  border-radius: var(--raio-p);
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: left;
+  color: var(--tinta);
+}
+ 
+/* Ícone de atenção desenhado em CSS — sem imagem externa */
+.aviso-resultado::before {
+  content: "!";
+  flex: 0 0 26px;
+  height: 26px;
+  margin-top: 1px;
+  display: grid;
+  place-items: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--petroleo);
+  border-radius: 50%;
+}
+ 
+@media (max-width: 640px) {
+  .aviso-resultado {
+    padding: 16px 18px;
+    font-size: 0.95rem;
+  }
+}
+
+#secao-resultado:has(#bloco-fatores-risco-desktop:not([hidden])) #btn-nova-analise {
+  display: none;
+}
+
+/* =========================================================================
+   10. ABA "SOBRE O CÂNCER DE PELE"
+   Página editorial: o conteúdo é texto corrido, com hierarquia feita por
+   tamanho e espaço. Sem cards, sem ícones, sem caixas coloridas.
+   Só três exceções, todas justificadas: as duas colunas de comparação,
+   o fluxo de uma linha e o aviso do epidermIA.
+   ========================================================================= */
+
+/* Coluna de leitura um pouco mais estreita que as outras abas ------------- */
+.pagina-pele { max-width: 720px; }
+
+/* Cabeçalho --------------------------------------------------------------- */
+.pele-cabecalho {
+  margin-bottom: 44px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--agua-linha);
+}
+
+.pele-titulo {
+  font-size: clamp(1.9rem, 4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--petroleo);
+  margin: 0 0 18px;
+}
+
+.pele-lead {
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--cinza);
+  margin: 0 !important;
+  max-width: none;
+}
+
+/* Seções: separadas por espaço, não por linhas ---------------------------- */
+.pele-secao { margin-bottom: 52px; }
+
+.pele-secao:last-child { margin-bottom: 0; }
+
+/* Divisor só onde o assunto realmente muda */
+.pele-secao--divisor {
+  padding-top: 48px;
+  border-top: 1px solid var(--agua-linha);
+}
+
+.pele-subtitulo {
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--petroleo);
+  margin: 0 0 16px;
+}
+
+/* Duas colunas de comparação (melanoma/não melanoma e CBC/CEC) ------------- */
+.pele-colunas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin: 30px 0;
+}
+
+.pele-coluna-titulo {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--petroleo);
+  margin: 0 0 8px;
+}
+
+.pele-colunas p {
+  margin: 0 !important;
+  max-width: none;
+}
+
+/* Listas ------------------------------------------------------------------ */
+.pele-lista {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  max-width: var(--medida);
+}
+
+.pele-lista li {
+  position: relative;
+  padding: 0 0 12px 22px;
+  line-height: 1.6;
+}
+
+.pele-lista li:last-child { padding-bottom: 0; }
+
+.pele-lista li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.72em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--petroleo);
+}
+
+/* Botão único da página --------------------------------------------------- */
+.pele-acao { margin: 0 !important; }
+
+/* Linha de fonte / observação --------------------------------------------- */
+.pele-fonte {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--cinza);
+  margin: 22px 0 0 !important;
+}
+
+/* Fluxo em uma linha ------------------------------------------------------ */
+.pele-fluxo {
+  margin: 26px 0 !important;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--petroleo);
+  max-width: none;
+}
+
+.pele-fluxo span {
+  color: var(--cinza);
+  margin: 0 10px;
+  font-weight: 400;
+}
+
+/* Aviso do epidermIA ------------------------------------------------------ */
+.pele-aviso {
+  margin: 0 !important;
+  padding: 18px 22px;
+  background: var(--agua);
+  border-left: 3px solid var(--petroleo);
+  color: var(--tinta);
+  line-height: 1.6;
+  max-width: none;
+}
+
+/* Referências ------------------------------------------------------------- */
+.pele-referencias-titulo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cinza);
+  margin: 0 0 16px;
+}
+
+.pele-referencias ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pele-referencias li {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  padding: 7px 0;
+}
+
+.pele-referencias a {
+  color: var(--petroleo);
+  text-decoration: none;
+  border-bottom: 1px solid var(--agua-linha);
+}
+
+.pele-referencias a:hover {
+  color: var(--tinta);
+  border-bottom-color: var(--petroleo);
+}
+
+/* Responsivo -------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .pele-cabecalho { margin-bottom: 36px; padding-bottom: 24px; }
+  .pele-secao { margin-bottom: 42px; }
+  .pele-secao--divisor { padding-top: 38px; }
+  .pele-colunas { grid-template-columns: 1fr; gap: 28px; margin: 26px 0; }
+  .pele-aviso { padding: 16px 18px; }
+  .pele-acao .btn { display: block; width: 100%; }
+}
